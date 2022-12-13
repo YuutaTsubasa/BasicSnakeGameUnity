@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using UniRx;
 using UnityEngine;
 using Yuuta.Core;
 
@@ -9,15 +11,21 @@ namespace Yuuta.Snake
 {
     public class Body : MonoBehaviour
     {
-        [SerializeField] private int _maxQueueSize = 20;
-
-        private Queue<Vector2> _nextPositionsQueue = new Queue<Vector2>();
-        private Option<Body> _nextBody;
-        private bool _isFirst = false;
-
-        public void SetFirst()
-            => _isFirst = true;
+        private enum State
+        {
+            Initial,
+            WaitMove,
+            CanMove
+        }
         
+        private readonly TimeSpan _startDelayDuration = TimeSpan.FromSeconds(0.1f);
+        private Queue<Vector2> _nextPositionsQueue = new();
+        private Option<Body> _nextBody;
+        private State _state = State.Initial;
+
+        public void SetCanMove()
+            => _state = State.CanMove;
+
         public void SetNextBody(Body body)
             => _nextBody = body.SomeNotNull();
 
@@ -27,7 +35,22 @@ namespace Yuuta.Snake
         public void PushPosition(Vector2 nextPosition)
         {
             _nextPositionsQueue.Enqueue(nextPosition);
-            if (!_isFirst && _nextPositionsQueue.Count <= _maxQueueSize) return;
+
+            if (_state == State.Initial)
+            {
+                _state = State.WaitMove;
+                Observable.Timer(_startDelayDuration)
+                    .Subscribe(_ => _state = State.CanMove)
+                    .AddTo(this);
+            }
+
+            if (_state == State.CanMove) _UpdatePosition();
+        }
+
+        private void _UpdatePosition()
+        {
+            if (_nextPositionsQueue.Count <= 0)
+                return;
             
             var topNextPosition = _nextPositionsQueue.Dequeue();
             GetComponent<RectTransform>().anchoredPosition = topNextPosition;

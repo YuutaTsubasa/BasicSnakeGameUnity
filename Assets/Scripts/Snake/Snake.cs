@@ -55,7 +55,7 @@ namespace Yuuta.Snake
             _currentDirection = _direction;
             
             var firstBody = _CreateBody(_startPosition, _bodySize);
-            firstBody.SetFirst();
+            firstBody.SetCanMove();
             _bodies.Add(firstBody);
         }
 
