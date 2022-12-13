@@ -1457,6 +1457,7 @@ MonoBehaviour:
   _direction: 0
   _speed: 1000
   _rushSpeed: 200000
+  _accumulatedSpeed: 0
   _groundRectTransform: {fileID: 1210597153}
   _bodyRootTransform: {fileID: 1675184583}
   _bodyPrefab: {fileID: 1774927208}

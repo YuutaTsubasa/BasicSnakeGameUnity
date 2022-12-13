@@ -5,7 +5,7 @@
 一個在兩次實況直播([#1](https://yutaii.run/v/323)、[#2](https://yutaii.run/v/328))中製作出來的貪食蛇遊戲。
 
 ## 遊玩方式
-進入網頁即可遊玩。
+進入[網頁](https://yuuta-tsubasa.studio/BasicSnakeGameUnity)即可遊玩。
 
 ## 專案說明
 
